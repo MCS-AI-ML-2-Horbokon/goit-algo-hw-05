@@ -1,44 +1,18 @@
-def compute_LPS(pattern: str) -> list[int]:
-    lps = [0] * len(pattern)
-    length = 0
-    index = 1
-    while index < len(pattern):
-        if pattern[index] == pattern[length]:
-            length += 1
-            lps[index] = length
-            index += 1
-        else:
-            if length != 0:
-                length = lps[length - 1]
-            else:
-                lps[index] = 0
-                index += 1
-    return lps
+from typing import Callable
+from algorithms.knuth import knuth_search
+from algorithms.boyer import boyer_search
 
-def knuth_search(pattern: str, string: str) -> int | None:
-    pattern_size = len(pattern)
-    string_size = len(string)
-    lps = compute_LPS(pattern)
-    string_index = 0
-    pattern_index = 0
-
-    while string_index < string_size:
-        if pattern[pattern_index] == string[string_index]:
-            string_index += 1
-            pattern_index += 1
-        elif pattern_index != 0:
-            pattern_index = lps[pattern_index - 1]
-        else:
-            string_index += 1
-
-        if pattern_index == pattern_size:
-            return string_index - pattern_index
-
-    return None
-
+def verify_asserts(search: Callable[[str, str], int | None]) -> None:
+    assert search("basdd", "basddadaadddasdadabaabdadaada") == 0
+    assert search("basdd", "basddadaadddasdadabasddadaada") == 0
+    assert search("abaab", "basddadaadddasdadabaabdadaada") == 17
+    assert search("daada", "basddadaadddasdadabaabdadaada") == 24
+    assert search("abaab", "basddadaadddasdadaxaabdadaada") is None
+    assert search("", "basddadaadddasdadaxaabdadaada") is None
+    assert search("basddadaadddasdadaxaabdadaada", "") is None
+    assert search("basddadaadddasdadaxaabdadaada", "basddadaadddasdadaxaabdadaada") == 0
+    assert search("basddadaadddasdadaxaabdadaada", "basddadaadddasdadaxaabdadaad") is None
 
 if __name__ == "__main__":
-    assert knuth_search("basdd", "basddadaadddasdadabaabdadaada") == 0
-    assert knuth_search("abaab", "basddadaadddasdadabaabdadaada") == 17
-    assert knuth_search("daada", "basddadaadddasdadabaabdadaada") == 24
-    assert knuth_search("abaab", "basddadaadddasdadaxaabdadaada") is None
+    verify_asserts(knuth_search)
+    verify_asserts(boyer_search)
