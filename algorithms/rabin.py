@@ -6,11 +6,11 @@ def naive_compare(a: str, b: str) -> bool:
     size = len(a) # assume has equal size
     for index in range(size):
         if a[index] != b[index]:
+            # print("Collision")
             return False
     return True
 
 def rabin_search(pattern: str, string: str) -> int | None:
-
     string_size = len(string)
     pattern_size = len(pattern)
     if pattern_size == 0 or pattern_size > string_size:
