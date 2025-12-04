@@ -3,7 +3,7 @@ from pathlib import Path
 from time import perf_counter_ns
 from algorithms.knuth import knuth_search
 from algorithms.boyer import boyer_search
-from algorithms.rabin import rabin_search
+from algorithms.rabin import rabin_search_naive, rabin_search_polynomial
 
 
 SearchFunction = Callable[[str, str], int | None]
@@ -33,17 +33,20 @@ def benchmark_article(index: int, article: str, patterns: tuple[str, str]):
     print("\n===== GOOD =====")
     benchmark(knuth_search, good, article)
     benchmark(boyer_search, good, article)
-    benchmark(rabin_search, good, article)
+    benchmark(rabin_search_polynomial, good, article)
+    benchmark(rabin_search_naive, good, article)
 
     print("\n===== BAD ======")
     benchmark(knuth_search, bad, article)
     benchmark(boyer_search, bad, article)
-    benchmark(rabin_search, bad, article)
+    benchmark(rabin_search_polynomial, bad, article)
+    benchmark(rabin_search_naive, bad, article)
 
 if __name__ == "__main__":
     verify_asserts(knuth_search)
     verify_asserts(boyer_search)
-    verify_asserts(rabin_search)
+    verify_asserts(rabin_search_polynomial)
+    verify_asserts(rabin_search_naive)
 
     data = Path("./data").resolve()
     article_1 = data / "article_1.txt"
